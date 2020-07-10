@@ -11,9 +11,12 @@ import kg.amangram.movieapp.data.model.State
 import kg.amangram.movieapp.data.repository.MovieRepository
 
 class MovieDataSource(private val repository: MovieRepository) : PageKeyedDataSource<Int, Movie>() {
+
     private val compositeDisposable = CompositeDisposable()
     private var searchText: String? = null
     private val state by lazy { MutableLiveData<State<String>>() }
+    private val searchSize by lazy { MutableLiveData<Int>() }
+
     override fun loadInitial(
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, Movie>
@@ -26,6 +29,7 @@ class MovieDataSource(private val repository: MovieRepository) : PageKeyedDataSo
                     if (response.isSuccessful) {
                         response.body()?.results?.let { movieList ->
                             state.postValue(State.success("Success"))
+                            searchSize.postValue(movieList.size)
                             callback.onResult(movieList, null, FIRST_PAGE + 1)
                         }
                     }
@@ -76,6 +80,8 @@ class MovieDataSource(private val repository: MovieRepository) : PageKeyedDataSo
     }
 
     fun getState() = state as LiveData<State<String>>
+
+    fun getSearchSize() = searchSize as LiveData<Int>
 
     private fun getApi(page: Int) =
         if (searchText.isNullOrEmpty()) repository.getMovies(page) else repository.search(

@@ -32,4 +32,5 @@ class MainViewModel(
 
     fun getState() = dataSourceFactory.getState()
 
+    fun getSearchSize() = dataSourceFactory.getSearchSize()
 }

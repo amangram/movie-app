@@ -90,13 +90,15 @@ class MainActivity : AppCompatActivity(), MenuItem.OnActionExpandListener,
     }
 
     private fun searchStateListener(){
-        if (!movieAdapter.currentList.isNullOrEmpty()){
-            tv_no_matches.gone()
-            rv_movies.visible()
-        } else{
-            rv_movies.gone()
-            tv_no_matches.visible()
-        }
+        viewModel.getSearchSize()?.observe(this, Observer { size->
+            if (size>0){
+                tv_no_matches.gone()
+                rv_movies.visible()
+            } else{
+                rv_movies.gone()
+                tv_no_matches.visible()
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
