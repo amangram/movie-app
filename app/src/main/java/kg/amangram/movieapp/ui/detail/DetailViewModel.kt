@@ -34,4 +34,9 @@ class DetailViewModel(
             is State.Success-> favoritesRepository.deleteMovie((_movie.value as State.Success<MovieById>).data)
         }
     }
+
+    override fun onCleared() {
+        favoritesRepository.clear()
+        super.onCleared()
+    }
 }
